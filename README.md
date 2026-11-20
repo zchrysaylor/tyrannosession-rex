@@ -1,27 +1,23 @@
 # Tyrannosession Rex
 
-A simple "sessionizer" for [Rex](https://www.superlogical.com/rex/docs/installation), consisting of a floating `fzf` project picker and optional auto-launched commands/tabs.
+A simple "sessionizer" for [Rex](https://www.superlogical.com/rex/docs/installation): a floating `fzf` project picker that opens each project in its own session, optionally with startup tabs/programs.
 
 Requires `fd` and `fzf`.
 
 ## Setup
 
-Copy `tyrannosession-rex.lua` to `~/.config/rex/`, then add this to your Rex config (`~/.config/rex/init.lua`), adjusting the project directories:
+Copy `tyrannosession-rex.lua` to `~/.config/rex/`, then add this to `~/.config/rex/init.lua`:
 
 ```lua
-local home = assert(os.getenv("HOME"))
-local path = home .. "/.config/rex/tyrannosession-rex.lua"
-
-dofile(path).setup({
-   script_path = path,
-   roots = { home .. "/Code" }, -- search root dirs; includes their immediate subdirectories
-   programs = { { "pi" }, { "zsh" } }, -- optional; the tabs/programs you want on new session creation
+require("tyrannosession-rex").setup({
+   roots = { "~/Code" }, -- search these dirs and their immediate subdirectories
+   programs = { { "pi" }, { "zsh" } }, -- optional; one tab per program in new sessions
+   executables = { fd = "/opt/homebrew/bin/fd", fzf = "/opt/homebrew/bin/fzf" }, -- if Rex's PATH lacks them
    bindings = {
-      picker = "ctrl+b>f",
-      new_tab = { "cmd+t", "ctrl+b>c" }, -- optional
+      picker = "ctrl+b>f", -- the default
+      new_tab = { "cmd+t", "ctrl+b>c" }, -- optional; new tab at the project root
    },
 })
 ```
 
 Apply changes with `rex config reload`.
-
